@@ -24,5 +24,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(cli11)
 FetchContent_MakeAvailable(eztimer)
 
-add_executable(divmult test.cpp)
-target_link_libraries(divmult CLI11::CLI11 tatami::eztimer)
+add_executable(basic basic.cpp)
+target_link_libraries(basic CLI11::CLI11 tatami::eztimer)
+
+add_executable(normalize normalize.cpp)
+target_link_libraries(normalize CLI11::CLI11 tatami::eztimer)
