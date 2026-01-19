@@ -29,6 +29,14 @@ Division:      	0.0137299 ± 1.95084e-05
 Multiplication:	0.0136978 ± 3.16613e-05
 ```
 
+On a Mac M2, we get:
+
+```
+$ ./build/basic
+Division:      	0.00203902 ± 0.000123369
+Multiplication:	0.00200791 ± 8.85522e-05
+```
+
 Not much effect, it seems.
 I'd guess that the CPU is bottlenecked by reading the array from main memory, such that the speed of the actual operation doesn't matter.
 
@@ -46,6 +54,16 @@ log1p(x / f) / log(2): 0.144089 ± 0.000512589
 log1p(x * r) / log(2): 0.12879 ± 0.000733333
 log2(x / f + 1):       0.0981286 ± 0.000795611
 log2(x * r + 1):       0.0792897 ± 0.000827526
+```
+
+On a Mac M2, we get:
+
+```
+$ ./build/normalize
+log1p(x / f) / log(2): 0.0599988 ± 0.000203352
+log1p(x * r) / log(2): 0.054169 ± 0.0001208
+log2(x / f + 1):       0.0525862 ± 7.10782e-05
+log2(x * r + 1):       0.045104 ± 9.04263e-05
 ```
 
 Division is significantly faster here.
