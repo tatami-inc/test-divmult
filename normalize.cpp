@@ -29,6 +29,8 @@ int main(int argc, char ** argv) {
 
     const double denom = unif(rng);
     const double denom2 = 1.0/denom;
+    constexpr double ldenom = std::log(2);
+    constexpr double ldenom2 = 1 / ldenom;
 
     // Setting up the functions.
     std::vector<std::function<double()> > funs;
@@ -37,7 +39,7 @@ int main(int argc, char ** argv) {
     std::vector<double> log1pdiv_results(len);
     funs.emplace_back([&]() -> double {
         for (std::size_t i = 0; i < len; ++i) {
-            log1pdiv_results[i] = std::log1p(inputs[i] / denom) / std::log(2);
+            log1pdiv_results[i] = std::log1p(inputs[i] / denom) / ldenom;
         }
         return log1pdiv_results.front() + log1pdiv_results[len/2] + log1pdiv_results.back();
     });
@@ -45,7 +47,7 @@ int main(int argc, char ** argv) {
     std::vector<double> log1pmult_results(len);
     funs.emplace_back([&]() -> double {
         for (std::size_t i = 0; i < len; ++i) {
-            log1pmult_results[i] = std::log1p(inputs[i] * denom2) / std::log(2);
+            log1pmult_results[i] = std::log1p(inputs[i] * denom2) * ldenom2;
         }
         return log1pmult_results.front() + log1pmult_results[len/2] + log1pmult_results.back();
     });
@@ -64,6 +66,22 @@ int main(int argc, char ** argv) {
             log2mult_results[i] = std::log2(inputs[i] * denom2 + 1); 
         }
         return log2mult_results.front() + log2mult_results[len/2] + log2mult_results.back();
+    });
+
+    std::vector<double> logdiv_results(len);
+    funs.emplace_back([&]() -> double {
+        for (std::size_t i = 0; i < len; ++i) {
+            logdiv_results[i] = std::log(inputs[i] / denom + 1) / ldenom; 
+        }
+        return logdiv_results.front() + logdiv_results[len/2] + logdiv_results.back();
+    });
+
+    std::vector<double> logmult_results(len);
+    funs.emplace_back([&]() -> double {
+        for (std::size_t i = 0; i < len; ++i) {
+            logmult_results[i] = std::log(inputs[i] * denom2 + 1) * ldenom2; 
+        }
+        return logmult_results.front() + logmult_results[len/2] + logmult_results.back();
     });
 
     // Performing the iterations.
@@ -86,10 +104,12 @@ int main(int argc, char ** argv) {
         opt
     );
 
-    std::cout << "log1p(x / f) / log(2): " << res[0].mean.count() << " ± " << res[0].sd.count() / std::sqrt(res[0].times.size()) << std::endl;
-    std::cout << "log1p(x * r) / log(2): " << res[1].mean.count() << " ± " << res[1].sd.count() / std::sqrt(res[1].times.size()) << std::endl;
-    std::cout << "log2(x / f + 1):       " << res[2].mean.count() << " ± " << res[2].sd.count() / std::sqrt(res[2].times.size()) << std::endl;
-    std::cout << "log2(x * r + 1):       " << res[3].mean.count() << " ± " << res[3].sd.count() / std::sqrt(res[3].times.size()) << std::endl;
+    std::cout << "log1p(x / f) / M:   " << res[0].mean.count() << " ± " << res[0].sd.count() / std::sqrt(res[0].times.size()) << std::endl;
+    std::cout << "log1p(x * r) * N:   " << res[1].mean.count() << " ± " << res[1].sd.count() / std::sqrt(res[1].times.size()) << std::endl;
+    std::cout << "log2(x / f + 1):    " << res[2].mean.count() << " ± " << res[2].sd.count() / std::sqrt(res[2].times.size()) << std::endl;
+    std::cout << "log2(x * r + 1):    " << res[3].mean.count() << " ± " << res[3].sd.count() / std::sqrt(res[3].times.size()) << std::endl;
+    std::cout << "log(x / f + 1) / M: " << res[4].mean.count() << " ± " << res[4].sd.count() / std::sqrt(res[4].times.size()) << std::endl;
+    std::cout << "log(x * r + 1) * N: " << res[5].mean.count() << " ± " << res[5].sd.count() / std::sqrt(res[5].times.size()) << std::endl;
 
     return 0;
 }

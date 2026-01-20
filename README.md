@@ -44,16 +44,19 @@ I'd guess that the CPU is bottlenecked by reading the array from main memory, su
 
 A more robust test involves log-normalization of a count matrix in RNA-seq data.
 This involves computing $\log_2(x / f + 1)$ where $x$ is the array of data and $f$ is a constant size factor.
-We consider several permutations of this approach using `log1p` instead of `log2` and/or multiplying by the reciprocal.
+We consider several permutations of this approach using `log1p` instead of `log2` and/or multiplying by the reciprocal
+($r = f^{-1}$, $M = \log 2$, $N = (\log 2)^{-1}$).
 
 On an Intel i7-8850H, we get:
 
 ```
 $ ./build/normalize
-log1p(x / f) / log(2): 0.144089 ± 0.000512589
-log1p(x * r) / log(2): 0.12879 ± 0.000733333
-log2(x / f + 1):       0.0981286 ± 0.000795611
-log2(x * r + 1):       0.0792897 ± 0.000827526
+log1p(x / f) / M:   0.150602 ± 0.00142801
+log1p(x * r) * N:   0.133567 ± 0.00120476
+log2(x / f + 1):    0.101818 ± 0.00119196
+log2(x * r + 1):    0.0837252 ± 0.00128969
+log(x / f + 1) / M: 0.0727775 ± 0.00114991
+log(x * r + 1) * N: 0.062309 ± 0.00119778
 ```
 
 On a Mac M2, we get:
