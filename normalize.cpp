@@ -29,8 +29,8 @@ int main(int argc, char ** argv) {
 
     const double denom = unif(rng);
     const double denom2 = 1.0/denom;
-    constexpr double ldenom = std::log(2);
-    constexpr double ldenom2 = 1 / ldenom;
+    const double ldenom = std::log(2.0);
+    const double ldenom2 = 1 / ldenom;
 
     // Setting up the functions.
     std::vector<std::function<double()> > funs;
